@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Model;
 using Amazon.Runtime.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Web.Controllers
 {
     [Route("api/[controller]/[Action]")]
+    [Authorize]
     [ApiController]
     public class CrudController : ControllerBase
     {
