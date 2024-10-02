@@ -7,10 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<ICrudDL, CrudDL>();
-builder.Services.AddScoped<IUserDL, UserDL>();
-builder.Services.AddScoped<ITravellerDL, TravellerDL>();
-builder.Services.AddScoped<ITicketDL, TicketDL>();
-builder.Services.AddScoped<ITrainDL, TrainDL>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
