@@ -34,6 +34,8 @@ builder.Services.AddScoped<ICrudDL, CrudDL>();
 builder.Services.AddScoped<IUserDL, UserDL>();
 builder.Services.AddScoped<IProductDL, ProductDL>();
 builder.Services.AddScoped<IOrderDL, OrderDL>();
+builder.Services.AddScoped<IInventoryDL, InventoryDL>();
+builder.Services.AddScoped<IVendorDL, VendorDL>();
 
 // Configure Swagger to use JWT authentication
 builder.Services.AddSwaggerGen(c =>
