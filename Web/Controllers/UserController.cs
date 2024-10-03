@@ -7,7 +7,7 @@ using Web.Model;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[Action]")]
     [Authorize]
     [ApiController]
     public class UserController : ControllerBase
@@ -19,14 +19,14 @@ namespace Web.Controllers
             _userDL = userDL;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userDL.GetAllUsers();
             return Ok(users);
         }
 
-        [HttpGet("Get/{userId}")]
+        [HttpGet]
         public async Task<IActionResult> GetUserById(string userId)
         {
             var user = await _userDL.GetUserById(userId);
@@ -37,7 +37,7 @@ namespace Web.Controllers
             return Ok(user);
         }
 
-        [HttpPut("Update")]
+        [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] User user)
         {
             bool updated = await _userDL.UpdateUser(user);
@@ -51,7 +51,7 @@ namespace Web.Controllers
             }
         }
 
-        [HttpDelete("Delete/{userId}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             bool deleted = await _userDL.DeleteUser(userId);
@@ -65,7 +65,7 @@ namespace Web.Controllers
             }
         }
 
-        [HttpGet("GetUserByToken")]        
+        [HttpGet]        
         public async Task<IActionResult> GetUserByToken()
         {
             
