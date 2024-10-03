@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.DataAccessLayer;
 using Web.Model;
@@ -63,5 +64,25 @@ namespace Web.Controllers
                 return BadRequest("Delete failed.");
             }
         }
+
+        [HttpGet("GetUserByToken")]        
+        public async Task<IActionResult> GetUserByToken()
+        {
+            
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("Invalid Token: User ID not found.");
+            }
+            
+            var user = await _userDL.GetUserById(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(user);
+        }
+
     }
 }

@@ -22,7 +22,7 @@ namespace Web.Controllers
             _userDL = userDL;
             _configuration = configuration;
         }
-        private string GenerateToken(string username, string role)
+        private string GenerateToken(string username, string role, string userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
@@ -30,9 +30,10 @@ namespace Web.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role, role)
-                }),
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.NameIdentifier, userId) 
+        }),
                 Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:DurationInMinutes"])),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _configuration["Jwt:Issuer"],
@@ -41,6 +42,7 @@ namespace Web.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> UserLogin([FromBody] LoginRequestMail request)
@@ -51,7 +53,7 @@ namespace Web.Controllers
                 return Unauthorized("Invalid credentials.");
             }
 
-            var token = GenerateToken(user.Email, user.Role);
+            var token = GenerateToken(user.Email, user.Role, user.UserId);
             return Ok(new { Token = token });
         }
         
