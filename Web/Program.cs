@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<ICrudDL, CrudDL>();
-builder.Services.AddScoped<IAdminDL, AdminDL>();
+builder.Services.AddScoped<IUserDL, UserDL>();
 
 // Configure Swagger to use JWT authentication
 builder.Services.AddSwaggerGen(c =>
