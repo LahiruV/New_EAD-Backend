@@ -36,14 +36,7 @@ namespace Web.DataAccessLayer.Services
         public async Task<bool> UpdateInventory(Inventory inventory)
         {
             var updateResult = await _inventories.ReplaceOneAsync(inv => inv.InventoryId == inventory.InventoryId, inventory);
-            if (updateResult.ModifiedCount == 1)
-            {
-                // Check and update the stock alert status
-                inventory.StockAlert = inventory.StockLevel <= inventory.LowStockThreshold;
-                await _inventories.ReplaceOneAsync(inv => inv.InventoryId == inventory.InventoryId, inventory);
-                return true;
-            }
-            return false;
+            return updateResult.ModifiedCount == 1;
         }
 
         public async Task<bool> DeleteInventory(string inventoryId)

@@ -46,13 +46,32 @@ namespace Web.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateInventory([FromBody] Inventory inventory)
         {
-            var updated = await _inventoryDL.UpdateInventory(inventory);
+            var currentInventory = await _inventoryDL.GetInventoryByProductId(inventory.ProductID);
+            if (currentInventory == null)
+            {
+                return NotFound("Inventory not found.");
+            }
+
+            if (inventory.StockLevel <= inventory.LowStockThreshold)
+            {
+                SendLowStockAlert(inventory);
+                return BadRequest("Stock level too low; update aborted.");
+            }
+
+            bool updated = await _inventoryDL.UpdateInventory(inventory);
             if (updated)
             {
                 return Ok("Inventory updated successfully.");
             }
             return BadRequest("Failed to update inventory.");
         }
+
+        private void SendLowStockAlert(Inventory inventory)
+        {
+            // Implement your alert mechanism here
+            Console.WriteLine($"Alert: Stock level for Product ID {inventory.ProductID} is low.");
+        }
+
 
         [HttpDelete]
         public async Task<IActionResult> DeleteInventory(string inventoryId)

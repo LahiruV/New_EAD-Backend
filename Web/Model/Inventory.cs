@@ -6,7 +6,7 @@ namespace Web.Model
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string InventoryId { get; set; }  
+        public string? InventoryId { get; set; }  
 
         public string ProductID { get; set; }
         public int StockLevel { get; set; }
