@@ -6,7 +6,7 @@ namespace Web.DataAccessLayer
 {
     public interface IProductDL
     {
-        Task<Product> CreateProduct(Product product);
+        Task<(bool created, string message)> CreateProduct(Product product);
         Task<List<Product>> GetAllProducts();
         Task<Product> GetProductById(string productId);
         Task<bool> UpdateProduct(Product product);

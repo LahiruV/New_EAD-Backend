@@ -22,8 +22,15 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] Product product)
         {
-            var createdProduct = await _productDL.CreateProduct(product);
-            return Ok(createdProduct);
+            var (created, message) = await _productDL.CreateProduct(product);
+            if (created)
+            {
+                return Ok(new { Message = message, Product = product });
+            }
+            else
+            {
+                return BadRequest(new { Message = message });
+            }
         }
 
         [HttpGet]

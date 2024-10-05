@@ -9,20 +9,42 @@ namespace Web.DataAccessLayer.Services
     public class ProductDL : IProductDL
     {
         private readonly IMongoCollection<Product> _products;
+        private readonly IInventoryDL _inventoryDL; 
 
-        public ProductDL(IConfiguration configuration)
+        public ProductDL(IConfiguration configuration, IInventoryDL inventoryDL) 
         {
             var client = new MongoClient(configuration["Database:ConnectionString"]);
             var database = client.GetDatabase(configuration["Database:DatabaseName"]);
             _products = database.GetCollection<Product>("Products");
+            _inventoryDL = inventoryDL; 
         }
 
-        public async Task<Product> CreateProduct(Product product)
+        public async Task<(bool created, string message)> CreateProduct(Product product)
         {
+            var inventory = await _inventoryDL.GetInventoryByProductId(product.ProductID);
+            if (inventory != null && inventory.StockLevel < product.StockLevel)
+            {
+                return (false, "Stock level too high, product not created.");
+            }
+
             product.CreatedDate = DateTime.UtcNow;
             product.ModifiedDate = DateTime.UtcNow;
+
+            if (inventory != null)
+            {
+                inventory.StockLevel -= product.StockLevel;
+                await _inventoryDL.UpdateInventory(inventory);
+            }
+
             await _products.InsertOneAsync(product);
-            return product;
+
+            if (inventory == null)
+            {
+                inventory = new Inventory { ProductID = product.ProductID, StockLevel = 0 };
+                await _inventoryDL.CreateInventory(inventory);
+            }
+
+            return (true, "Product created successfully.");
         }
 
         public async Task<List<Product>> GetAllProducts()
