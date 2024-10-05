@@ -36,6 +36,16 @@ builder.Services.AddScoped<IOrderDL, OrderDL>();
 builder.Services.AddScoped<IInventoryDL, InventoryDL>();
 builder.Services.AddScoped<IVendorDL, VendorDL>();
 
+// Adding CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials());
+});
+
 // Configure Swagger to use JWT authentication
 builder.Services.AddSwaggerGen(c =>
 {
@@ -57,10 +67,10 @@ builder.Services.AddSwaggerGen(c =>
             new OpenApiSecurityScheme
             {
                 Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
             },
             Array.Empty<string>()
         }
@@ -77,6 +87,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Enable CORS
+app.UseCors("AllowSpecificOrigin");
+
 app.UseAuthentication();
 app.UseAuthorization();
 

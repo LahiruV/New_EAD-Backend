@@ -25,9 +25,12 @@ namespace Web.DataAccessLayer.Services
                 throw new Exception("User with the same email already exists.");
             }
             user.SetPassword(user.Password);
+            user.CreatedDate = DateTime.UtcNow; 
+            user.ModifiedDate = DateTime.UtcNow;
             await _users.InsertOneAsync(user);
             return user;
         }
+
 
         public async Task<List<User>> GetAllUsers()
         {
@@ -46,9 +49,11 @@ namespace Web.DataAccessLayer.Services
 
         public async Task<bool> UpdateUser(User user)
         {
-            var updateResult = await _users.ReplaceOneAsync(u => u.UserId == user.UserId, user);
+            user.ModifiedDate = DateTime.UtcNow;
+            var updateResult = await _users.ReplaceOneAsync(u => u.UserId == user.UserId, user, new ReplaceOptions { IsUpsert = false });
             return updateResult.IsAcknowledged && updateResult.ModifiedCount == 1;
         }
+
 
         public async Task<bool> DeleteUser(string userId)
         {

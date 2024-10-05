@@ -13,11 +13,11 @@ namespace Web.Model
         [BsonElement("Email")]
         public string Email { get; set; }
 
-        public string Role { get; set; } = "Admin"; 
+        public string? Role { get; set; } = "Admin"; 
         public string Password { get; set; }
-        public string Status { get; set; } = "Active"; 
-        public DateTime CreatedDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public string? Status { get; set; } = "Active"; 
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public void SetPassword(string password)
         {
