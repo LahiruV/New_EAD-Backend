@@ -12,7 +12,7 @@ namespace Web.Model
         public string? VendorID { get; set; }
         public string VendorName { get; set; }
         public double AverageRating => CustomerComments.Select(x => x.Rating).DefaultIfEmpty(0).Average(); 
-        public List<CustomerFeedback> CustomerComments { get; set; } = new List<CustomerFeedback>();
+        public List<CustomerFeedback>? CustomerComments { get; set; } = new List<CustomerFeedback>();
     }
 
     public class CustomerFeedback
