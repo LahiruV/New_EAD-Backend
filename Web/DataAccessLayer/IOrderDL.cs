@@ -6,7 +6,7 @@ namespace Web.DataAccessLayer
 {
     public interface IOrderDL
     {
-        Task<Order> CreateOrder(Order order);
+        Task<(bool created, string message)> CreateOrder(Order order);
         Task<Order> GetOrderById(string orderId);
         Task<List<Order>> GetAllOrders();
         Task<bool> UpdateOrder(Order order);

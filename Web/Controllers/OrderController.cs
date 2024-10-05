@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Web.DataAccessLayer;
+using Web.DataAccessLayer.Services;
 using Web.Model;
 
 namespace Web.Controllers
@@ -21,8 +22,15 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] Order order)
         {
-            var createdOrder = await _orderDL.CreateOrder(order);
-            return Ok(createdOrder);
+            var (created, message) = await _orderDL.CreateOrder(order);
+            if (created)
+            {
+                return Ok(new { Message = message, Product = order });
+            }
+            else
+            {
+                return BadRequest(new { Message = message });
+            }
         }
 
         [HttpGet]
