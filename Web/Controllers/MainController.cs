@@ -47,16 +47,16 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UserLogin([FromBody] LoginRequestMail request)
         {
-            var user = await _userDL.GetUserByEmail(request.Email);
-            if (user == null || !user.VerifyPassword(request.Password))
+            var user = await _userDL.GetUserByEmail(request.Email);            
+            if (user == null || user.Status != "Active" || !user.VerifyPassword(request.Password))
             {
-                return Unauthorized("Invalid credentials.");
+                return Unauthorized("Invalid credentials or user not active.");
             }
 
             var token = GenerateToken(user.Email, user.Role, user.UserId);
             return Ok(new { Token = token, User = user });
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
