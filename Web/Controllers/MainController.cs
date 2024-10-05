@@ -54,7 +54,7 @@ namespace Web.Controllers
             }
 
             var token = GenerateToken(user.Email, user.Role, user.UserId);
-            return Ok(new { Token = token });
+            return Ok(new { Token = token, User = user });
         }
         
         [HttpPost]
