@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Model;
+using MongoDB.Bson;
 
 namespace Web.DataAccessLayer.Services
 {
@@ -15,15 +16,17 @@ namespace Web.DataAccessLayer.Services
             var client = new MongoClient(configuration["Database:ConnectionString"]);
             var database = client.GetDatabase(configuration["Database:DatabaseName"]);
             _inventories = database.GetCollection<Inventory>("Inventories");
-        }
+        }        
 
-        public async Task<Inventory> CreateInventory(Inventory inventory)
-        {
-            await _inventories.InsertOneAsync(inventory);
-            return inventory;
-        }
+    public async Task<Inventory> CreateInventory(Inventory inventory)
+    {
+        inventory.ProductID = ObjectId.GenerateNewId().ToString();
+        await _inventories.InsertOneAsync(inventory);
+        return inventory;
+    }
 
-        public async Task<Inventory> GetInventoryByProductId(string productId)
+
+    public async Task<Inventory> GetInventoryByProductId(string productId)
         {
             return await _inventories.Find(inv => inv.ProductID == productId).FirstOrDefaultAsync();
         }

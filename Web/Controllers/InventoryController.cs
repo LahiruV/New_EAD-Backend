@@ -67,8 +67,7 @@ namespace Web.Controllers
         }
 
         private void SendLowStockAlert(Inventory inventory)
-        {
-            // Implement your alert mechanism here
+        {            
             Console.WriteLine($"Alert: Stock level for Product ID {inventory.ProductID} is low.");
         }
 
