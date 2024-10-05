@@ -19,6 +19,8 @@ namespace Web.DataAccessLayer.Services
 
         public async Task<Product> CreateProduct(Product product)
         {
+            product.CreatedDate = DateTime.UtcNow;
+            product.ModifiedDate = DateTime.UtcNow;
             await _products.InsertOneAsync(product);
             return product;
         }
@@ -35,6 +37,7 @@ namespace Web.DataAccessLayer.Services
 
         public async Task<bool> UpdateProduct(Product product)
         {
+            product.ModifiedDate = DateTime.UtcNow;
             var result = await _products.ReplaceOneAsync(p => p.ProductID == product.ProductID, product);
             return result.IsAcknowledged && result.ModifiedCount == 1;
         }

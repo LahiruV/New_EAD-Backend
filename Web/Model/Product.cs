@@ -15,7 +15,7 @@ namespace Web.Model
         public int StockLevel { get; set; }
         public string Status { get; set; } = "Active"; 
         public string VendorID { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
     }
 }
